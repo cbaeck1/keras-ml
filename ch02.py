@@ -1,6 +1,7 @@
 
 import keras
-keras.__version__
+import matplotlib.pyplot as plt
+import image
 
 # train_images와 train_labels가 모델이 학습해야 할 훈련 세트를 구성합니다. 
 # 모델은 test_images와 test_labels로 구성된 테스트 세트에서 테스트될 것입니다. 
@@ -17,9 +18,9 @@ print(train_images.shape)
 print(len(train_images))
 print(train_labels)
 
-import matplotlib.pyplot as plt
 digit = train_images[4]
 plt.imshow(digit, cmap=plt.cm.binary)
+image.save_fig("2.1 train_images")  
 plt.show()
 
 # 작업 순서
@@ -30,7 +31,6 @@ plt.show()
 
 from keras import models
 from keras import layers
-
 # 1. 훈련 데이터 train_images 와 train_labels 를 network 에 주입
 #   1) 데이터정제필터
 #   2) 컴파일 (손실함수, 옵티마이저, 지표)
@@ -70,11 +70,12 @@ train_labels = to_categorical(train_labels)
 test_labels = to_categorical(test_labels)
 
 # 2. network 는 이미지와 레이블을 연관시킬 수 있도록 학습
+# 네트워크가 128개 샘플씩 미니 배치로 훈련 데이터를 다섯 번 반복
+# 각 반복마다 네트워크가 배치에서 손실에 대한 가중치의 그래디언트를 계산하고 그에 맞추어 가중치를 업데이트
+# 다섯 번의 epoch 동안 네트워크는 2,345번의 그래디언트 업데이트를 수행
 network.fit(train_images, train_labels, epochs=5, batch_size=128)
 # 3. test_images 에 대한 예측을 network 에게 요청
 test_loss, test_acc = network.evaluate(test_images, test_labels)
 # 4. 예측이 test_labels 와 맞는지 확인
 print('test_acc:', test_acc)
-
-
 
